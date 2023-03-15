@@ -395,3 +395,159 @@ void Menufonksiyonu1()       // HOCALAR ICIN
 	} while (secim != '0'); // Sifir karakteri basincaya kadar dongude (sistemde) olma kosulu
 
 }
+
+
+
+void Menufonksiyonu2()       // ÖĞRENCİLER ICIN
+{
+	system("cls");  // Onceki girdikleri silme
+
+	cout << "\n\t\t\t Sinav sistemine HOSGELDINIZ OGRENCIMIZ" << "  " << og.TcNo << endl;
+	cout << "\n\t\t\t---Tum ogrencilerimize BASARILAR dileriz-----\n" << endl;
+
+	char secim;
+
+	do
+	{
+		//Yapabilecek islemler (Menu)
+
+		cout << "\n\t\t______________________________________________________" << endl;
+		cout << "\t\t\t\t\tMENÜ" << endl;
+		cout << "\t\t------------------------------------------------------" << endl;
+
+		cout << "\n\n\t\t\t---Ne yapmak istiyorsunuz ?--- \n\n" << endl;
+
+		cout << "\t\t\t{1} Sinav Listesi" << endl;;
+		cout << "\t\t\t{2} Sinav sonuclari" << endl;
+		cout << "\t\t\t{0} Cikis " << endl;
+
+		cout << "\n\t\t******************************************************" << endl;
+		cout << "\n\t\t\t Secim numarasini girin:  "; /*cin >> secim;*/
+		secim = _getche();
+
+		switch (secim)
+		{
+		case '1':
+		{
+			Sinav::sinavlar sin;
+			system("cls");
+			cout << "\n\n\n\t\t\t\t SINAV LISTESI... " << endl;
+			sinav.SinavListesi(sin);
+			system("pause");
+			break;
+		}
+
+		case '2':
+		{
+			Sinav::singirenler gir;
+			system("cls");
+			cout << "\n\n\n\t\t\t\tSINAV SONUCLARI..." << endl;
+			sinav.SinavSonuclari(gir);
+			system("pause");
+			break;
+		}
+
+
+		case '0':
+		{
+			system("cls");
+			cout << "\n\n\n\n\t\t\tCikis yaptiniz" << endl;
+			system("pause");
+
+			exit(0); //Sistemden cikis 
+		}
+		default:cout << "\a"; // Yanlis tusa basinca ses cikma
+		}
+		system("cls");
+
+	} while (secim != '0'); // Sifir karakteri basincaya kadar dongude (sistemde) olma kosulu
+
+}
+
+
+
+void Sinav::Sinavbilgileri()
+{
+	char secim;
+
+	do
+	{
+		//Yapabilecek islemler (Menu)
+
+		cout << "\n\t\t______________________________________________________" << endl;
+		cout << "\t\t\t\t\tSINAV BILGILERI" << endl;
+		cout << "\t\t------------------------------------------------------" << endl;
+
+		cout << "\n\n\t\t\t---Ne yapmak istiyorsunuz ?--- \n\n" << endl;
+
+		cout << "\t\t\t{1} Sinav kaydi" << endl;
+		cout << "\t\t\t{2} Sinav listesi" << endl;
+		cout << "\t\t\t{3} Sinav ekleme" << endl;
+		cout << "\t\t\t{4} sinav silme" << endl;
+		cout << "\t\t\t{0} Cikis " << endl;
+
+		cout << "\n\t\t******************************************************" << endl;
+		cout << "\n\t\t\t Secim numarasini girin:  "; /*cin >> secim;*/
+		secim = _getche();
+
+		switch (secim)
+		{
+		case '1':
+		{
+			system("cls");
+			cout << "\n\n\n\t\t\t\tSINAV  KAYDI... " << endl;
+			sinav.Sinavkaydi();
+			break;
+		}
+
+		case '2':
+		{
+			Sinav::sinavlar sin;
+			system("cls");
+			cout << "\n\n\n\t\t\t\t SINAV LISTESI... " << endl;
+			sinav.SinavListesi(sin);
+			system("pause");
+			break;
+		}
+
+		case '3':
+		{
+			system("cls");
+			/*long long tc;*/
+			cout << "\n\n\n\t\t\t\tSINAV EKLEME... " << endl;
+			sinav.Sinavkaydi();       // sinav kaydi ve sinav ekleme ayni fonksiyon oldugu icin
+			break;
+		}
+
+		case '4':
+		{
+			system("cls");
+			int no;
+			cout << "\n\n\n\t\t\t\tSINAV SILME..." << endl;
+			cout << "\n\n\t\t\tSilenecek sinav numarasini giriniz : ";
+			cin >> no;
+			sinav.SinavSilme(no);
+			system("pause");
+			break;
+		}
+
+		case '0':
+		{
+			//Kullanici, sistemden ciktigi zaman 'cikis=dogru' ve 'giris degil' oldugu belirleme
+			cikis = true;
+			giris = false;
+
+			system("cls");
+			cout << "\n\n\n\n\t\t\t Sinav bilgilerinden cikis yaptiniz menuye geri donuyorsunuz " << endl;
+			cout << endl;
+
+			Menufonksiyonu1();
+
+		}
+		default:cout << "\a"; // Yanlis tusa basinca ses cikma
+		}
+		system("cls");
+
+	} while (secim != '0'); // Sifir karakteri basincaya kadar dongude (sistemde) olma kosulu
+
+}
