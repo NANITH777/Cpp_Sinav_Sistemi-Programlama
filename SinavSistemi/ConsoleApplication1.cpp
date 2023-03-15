@@ -551,3 +551,85 @@ void Sinav::Sinavbilgileri()
 	} while (secim != '0'); // Sifir karakteri basincaya kadar dongude (sistemde) olma kosulu
 
 }
+
+
+
+//______________________________________________________________________________________________
+/////////////////////////-----ÖĞRENCİ ÜZERINDE METOTLAR-------///////////////////
+//----------------------------------------------------------------------------------------------
+
+void Sinav::Ogrencikaydi()
+{
+	ofstream DosyaYaz; //ofstream tipinde (Yazmak icin) DosyaYaz degiskeni tanimlama
+	DosyaYaz.open("ogrenci.txt", ios::app); //ogrenci.txt dosyayi acma (olmasa da olusturacak)
+
+	char secim;
+
+	ogrenci og; // Sinav siniftaki  ogrenci struct tipindeki ok degisken tanimlama (bilgileri erismek icin) 
+
+	do
+	{
+		// Kullanicidan ogrenci bilgileri istemek
+
+		int haneSayisi;
+		cout << "\n\t\t\tTC numarasini giriniz			:"; cin >> og.TcNo;
+		cin.clear(); // Karakter bir girdigi zaman sonsuz donguye gitmemesi icin kullanildi
+		cin.ignore();
+		haneSayisi = log10(og.TcNo) + 1; // TC numara hanesini belirtmek icin
+
+		if (haneSayisi == 11) // TC numara 11 haneli oldugu zaman islemleri devami
+		{
+			cout << "\n\t\t\tAdi giriniz				:"; getline(cin, og.ad);
+			cout << "\n\t\t\tSoyadi giriniz				:"; getline(cin, og.soyad);
+			cout << "\n\t\t\tBolumunu giriniz			:"; getline(cin, og.bolum);
+			cout << "\n\t\t\tSifresini giriniz		    :"; cin >> og.sifre;
+
+
+			//Ogrenci.txt dosayaya yazma
+			DosyaYaz.setf(ios::left);
+			DosyaYaz << setw(15) << og.TcNo << setw(15) << og.ad << setw(15) << og.soyad <<
+				setw(15) << og.bolum << setw(15) << og.sifre
+				<< "\n" << endl;
+
+			cout << "\n\n\t\t\tBaska eklemeyi ister misin... ? (e/h)";
+			cin >> secim;
+		}
+		else
+		{
+			if (haneSayisi <= 0)
+			{
+				cout << "\n\t\t\t\a" << "0 veya Karakter veya Negatif TC numara olamaz, lütfen 11 haneli ve pozitif bir TC giriniz." << endl;
+			}
+			else
+				cout << "\n\t\t\t\a" << haneSayisi << " haneli TC numara olamaz, lütfen 11 haneli bir TC giriniz." << endl;
+
+
+			secim = 'e'; //dongu devami
+		}
+
+	} while (secim == 'e' || secim == 'E');
+
+	cout << "\n\t\t\tOgrenci kaydi basardi...\n\n\n" << endl;
+
+	DosyaYaz.close(); //ogrenci.txt dosyayi kapatma
+}
+
+
+void Sinav::OgrenciListesi(ogrenci og)
+{
+
+	ifstream DosyaOku;
+	DosyaOku.open("ogrenci.txt", ios::in);
+
+	cout << "\n\t\t\t" << "     TC   " << setw(14) << "    AD    " << setw(10) << "     SOYAD   " << setw(8) << "    BOLUM   " << endl;
+
+	while (!(DosyaOku.eof()))
+	{
+		DosyaOku >> og.TcNo >> og.ad >> og.soyad >> og.bolum >> og.sifre;
+		cout << "\n\t\t\t" << og.TcNo << setw(12) << og.ad << setw(12) << og.soyad << setw(12) << og.bolum << endl;
+	}
+
+
+	DosyaOku.close();
+
+}
