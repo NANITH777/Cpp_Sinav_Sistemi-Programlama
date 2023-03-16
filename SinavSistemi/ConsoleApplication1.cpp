@@ -633,3 +633,208 @@ void Sinav::OgrenciListesi(ogrenci og)
 	DosyaOku.close();
 
 }
+
+
+
+void Sinav::OgrenciEkleme()
+{
+	ofstream DosyaYaz; //ofstream tipinde (Yazmak icin) DosyaYaz degiskeni tanimlama
+	DosyaYaz.open("ogrenci.txt", ios::app); //ogrenci.txt dosyayi acma (olmasa da olusturacak)
+
+	char secim;
+
+	ogrenci og; // Sinav siniftaki  ogrenci struct tipindeki ok degisken tanimlama (bilgileri erismek icin) 
+
+	do
+	{
+		// Kullancidan ogrenci bilgileri istemek
+
+		int haneSayisi;
+		cout << "\n\t\t\tTC numarasini giriniz			:"; cin >> og.TcNo;
+		cin.clear(); // Karakter bir girdigi zaman sonsuz donguye gitmemesi icin kullanildi
+		cin.ignore();
+		haneSayisi = log10(og.TcNo) + 1; // TC numara hanesini belirtmek icin
+
+		if (haneSayisi == 11) // TC numara 11 haneli oldugu zaman islemleri devami
+		{
+			cout << "\n\t\t\tAdi giriniz				:"; getline(cin, og.ad);
+			cout << "\n\t\t\tSoyadi giriniz				:"; getline(cin, og.soyad);
+			cout << "\n\t\t\tBolumunu giriniz			:"; getline(cin, og.bolum);
+			cout << "\n\t\t\tSifresini giriniz		    :"; getline(cin, og.sifre);
+
+
+			//Ogrenci.txt dosayaya yazma
+			DosyaYaz.setf(ios::left);
+			DosyaYaz << setw(15) << og.TcNo << setw(15) << og.ad << setw(15) << og.soyad <<
+				setw(15) << og.bolum << setw(15) << og.sifre << setw(15)
+				<< "\n" << endl;
+
+			cout << "\n\n\t\t\tBaska eklemeyi ister misin... ? (e/h)";
+			cin >> secim;
+		}
+		else
+		{
+			if (haneSayisi <= 0)
+			{
+				cout << "\n\t\t\t\a" << "0 veya Karakter veya Negatif TC numara olamaz, lütfen 11 haneli ve pozitif bir TC giriniz." << endl;
+			}
+			else
+				cout << "\n\t\t\t\a" << haneSayisi << " haneli TC numara olamaz, lütfen 11 haneli bir TC giriniz." << endl;
+
+			secim = 'e'; //dongu devami
+		}
+
+	} while (secim == 'e' || secim == 'E');
+
+	cout << "\n\t\t\tOgrenci kaydi basardi...\n" << endl;
+
+	DosyaYaz.close(); //ogrenci.txt dosyayi kapatma
+}
+
+
+void Sinav::OgrenciSilme(long long tc)
+{
+	ogrenci og;
+
+	//Gecendeki gibi ayni mantikla islemleri dogru oldugu zaman kontrol degiskenleri tanimlama
+	bool ogrenciSilindi = false;
+	bool dogruTc = false;
+
+	//Islemlere baslamadan girildigi tc var olup olmadigi kontrol ettirmek.
+	ifstream DosyaOku1;
+	DosyaOku1.open("ogrenci.txt", ios::in);
+
+	if (DosyaOku1.is_open())//Dosyayi acik olup olmadigi bilme yontemi
+	{
+		DosyaOku1 >> og.TcNo >> og.ad >> og.soyad >> og.bolum >> og.sifre;
+
+
+		while (!DosyaOku1.eof())
+		{
+			if (og.TcNo == tc)
+			{
+				dogruTc = true;
+			}
+			DosyaOku1 >> og.TcNo >> og.ad >> og.soyad >> og.bolum >> og.sifre;
+		}
+		DosyaOku1.close();
+	}
+	else
+	{
+		cout << "\n\t\t\tOgrenci dosyasi acilmadi" << endl;
+	}
+
+	if (dogruTc)//Demek ki Tc'yi bulunup islemler yapilabilir
+	{
+
+		bool silme;
+
+		ifstream DosyaOku;
+		DosyaOku.open("ogrenci.txt", ios::in);
+		ofstream yeniDosyayaYaz;
+		yeniDosyayaYaz.open("gecici.txt");
+
+		DosyaOku >> og.TcNo >> og.ad >> og.soyad >> og.bolum >> og.sifre;
+
+		while (!DosyaOku.eof())
+		{
+			if (og.TcNo != tc)
+			{
+				//Girildigi silecenek tc'li ogrenci haric tum ogrenciler yeni dosyaya (gecici) yazmak
+				yeniDosyayaYaz.setf(ios::left);
+				yeniDosyayaYaz << setw(15) << og.TcNo << setw(15) << og.ad << setw(15) << og.soyad
+					<< setw(15) << og.bolum << setw(15) << og.sifre << setw(15) << "\n" << endl;
+
+				ogrenciSilindi = true;
+			}
+
+			DosyaOku >> og.TcNo >> og.ad >> og.soyad >> og.bolum >>
+				og.sifre; //Dosyayi okuma devami
+
+		}
+		if (ogrenciSilindi) //Silme basardi
+		{
+			cout << "\n\t\t\tOgrencimizde bu " << tc
+				<< " numarali ogrenci silindi...\n" << endl;
+		}
+		/*islemleri tamamladiktan sonra dosyalari kapatip
+		eski ogrenci dosyayi silip gecici dosyaya ogrenci adi verme */
+
+		DosyaOku.close();
+		yeniDosyayaYaz.close();
+
+		remove("ogrenci.txt");
+		rename("gecici.txt", "ogrenci.txt");
+
+	}
+	else
+	{
+		cout << "\n\t\t\tGirdiginiz TC numarasi bulunamadi"
+			<< "\n\t\t\tLütfen kontrol edin." << endl;
+	}
+
+}
+
+
+
+////////////////////////////SORU UZERINDE METOTLAR/////////////////////////////////////
+void Sinav::SoruEkleme()
+{
+	ofstream DosyaYaz; //ofstream tipinde (Yazmak icin) DosyaYaz degiskeni tanimlama
+	DosyaYaz.open("sorular.txt", ios::app); //ogrenci.txt dosyayi acma (olmasa da olusturacak)
+
+	char secim;
+
+	sorular sor; // Sinav siniftaki  sorular struct tipindeki sor degisken tanimlama (bilgileri erismek icin) 
+
+	// dizi doldurmak 
+	cout << "\t\t\t Sinav tipini girin: "; cin >> sor.sinavtipi;
+	cout << "\t\t\t Soru sayisini girin: "; cin >> sor.sorusayisi;
+	cout << "\t\t\t Sinav suresini girin: "; cin >> sor.sure;
+
+	for (int i = 0; i < sor.sorusayisi; i++)
+	{
+		sor.soru = sor.dizi[i][0];
+		sor.A = sor.dizi[i][1];
+		sor.B = sor.dizi[i][2];
+		sor.C = sor.dizi[i][3];
+		sor.D = sor.dizi[i][4];
+		sor.dogcev = sor.dizi[i][5];
+
+		cout << "\n\t\t\t sorunun numarasini girin: "; cin >> sor.sayi;
+		cout << "\n\t\t\t soru girin:   ";  cin >> sor.soru;
+		cout << "\t\t\t A) ";  cin >> sor.A;
+		cout << "\t\t\t B) ";  cin >> sor.B;
+		cout << "\t\t\t C) ";  cin >> sor.C;
+		cout << "\t\t\t D) ";  cin >> sor.D;
+		cout << "\t\t\tDogru cevap girin: "; cin >> sor.dogcev;
+		cout << "\t\t\t Puan: "; cin >> sor.puan;
+		cout << endl << endl;
+		cout << "\t\t\t" << sor.sayi << ". soru : " << sor.soru << setw(5) << " A)" << sor.A << setw(5) << " B)" << sor.B << setw(5) << " C)" << sor.C << setw(5) << " D)" << sor.D << setw(9) << " DoCev=" << sor.dogcev << setw(5) << " Puan=" << sor.puan;
+
+		//DosyaYaz << sor.sayi << sor.soru << "  A)" << sor.A << "  B)" << sor.B << "  C)" << sor.C << "  D)" << sor.D << "  DoCev=" << sor.dogcev << "    Puan" << sor.puan << "\n";
+		//Sorular.txt dosayaya yazma
+		DosyaYaz.setf(ios::left);
+		DosyaYaz << setw(8) << sor.sinavtipi << setw(8) << sor.sure << setw(8) << sor.sayi << setw(8) << sor.soru << setw(8) << sor.A << setw(8) << sor.B << setw(8) << sor.C << setw(8) << sor.D << setw(8) << sor.dogcev << setw(8) << sor.puan << "\n";
+	}
+
+	cout << "\n\t\t\tSoru kaydi basardi...\n\n\n" << endl;
+
+	DosyaYaz.close(); //sorular.txt dosyayi kapatma
+}
+
+
+void Sinav::SoruListesi(sorular sor)
+{
+	ifstream DosyaOku; // sorular  .text dosyayi okuma
+	DosyaOku.open("sorular.txt", ios::in);
+
+	cout << "\t\t\t Sinav tipini :" << sor.sinavtipi << endl;
+
+	while (!(DosyaOku.eof()))
+	{
+		DosyaOku >> sor.sinavtipi >> sor.sure >> sor.sayi >> sor.soru >> sor.A >> sor.B >> sor.C >> sor.D >> sor.dogcev >> sor.puan;
+		cout << "\n\t\t\t" << sor.sayi << ".)" << sor.soru << "  A) " << sor.A << "  B)" << sor.B << "  C)" << sor.C << "  D) " << sor.D << "  DoCev=" << sor.dogcev << "  puan= " << sor.puan << endl;
+	}
+	DosyaOku.close();  //sorular.txt dosyayi kapatma
+}
