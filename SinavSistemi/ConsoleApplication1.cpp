@@ -838,3 +838,287 @@ void Sinav::SoruListesi(sorular sor)
 	}
 	DosyaOku.close();  //sorular.txt dosyayi kapatma
 }
+
+
+////////////////////////////SINAV UZERINDE METOTLAR/////////////////////////////////////
+
+void Sinav::Sinavkaydi()
+{
+
+	ofstream DosyaYaz; //ofstream tipinde (Yazmak icin) DosyaYaz degiskeni tanimlama
+	DosyaYaz.open("sinav.txt", ios::app); //ogrenci.txt dosyayi acma (olmasa da olusturacak)
+
+	char secim;
+
+	sinavlar sin; // Sinav siniftaki  ogrenci struct tipindeki ok degisken tanimlama (bilgileri erismek icin) 
+
+	do
+	{
+		cout << "\n\t\t\t Sinav numarasini(Sirayla) giriniz :"; cin >> sin.sinavNo;
+		cout << "\n\t\t\t Sinav turunu giriniz	            :"; cin >> sin.sinavturu;
+		cout << "\n\t\t\t Sinav tarihini giriniz(GG/AA/YY)  :"; cin >> sin.sinavtarihi;
+		cout << "\n\t\t\t Sorular sayisini giriniz	        :"; cin >> sin.sorusay;
+		cout << "\n\t\t\t Sinav suresini giriniz(dakika)    :"; cin >> sin.sure;
+		cin.ignore();
+
+
+
+		//Sinav.txt dosayaya yazma
+		DosyaYaz.setf(ios::left);
+		DosyaYaz << setw(15) << sin.sinavNo << setw(15) << sin.sinavturu << setw(15) << sin.sinavtarihi << setw(15) << sin.sorusay << setw(15) << sin.sure <<
+			"\n" << endl;
+
+		cout << "\n\n\t\t\tBaska sinav kaydini ister misin... ? (e/h)";
+		cin >> secim;
+
+
+	} while (secim == 'e' || secim == 'E');
+
+	cout << "\n\t\t\Sinavlar kaydi basardi...\n" << endl;
+
+	DosyaYaz.close(); //sinav.txt dosyayi kapatma
+
+}
+
+void Sinav::SinavListesi(sinavlar sin)
+{
+	ifstream DosyaOku2;
+	DosyaOku2.open("sinav.txt", ios::in, ios::binary);  // sinav.text dosyayi okuma
+
+	cout << "\n\t\t\t" << "SinavNo" << setw(15) << "SINAV TIPI" << setw(8) << "TARIH" << setw(12) << "SORU SAYISI" << setw(11) << "SURE" << endl;
+
+	while (!(DosyaOku2.eof()))
+	{
+		DosyaOku2 >> sin.sinavNo >> sin.sinavturu >> sin.sinavtarihi >> sin.sorusay >> sin.sure;
+		cout << "\n\t\t\t" << setw(5) << sin.sinavNo << setw(15) << sin.sinavturu << setw(15) << sin.sinavtarihi << setw(6) << sin.sorusay << setw(11) << sin.sure << endl;
+	}
+
+
+	DosyaOku2.close();  //sinav.txt dosyayi kapatma
+}
+
+
+void Sinav::SinavSilme(int no)
+{
+	sinavlar sin;
+
+	//Gecendeki gibi ayni mantikla islemleri dogru oldugu zaman kontrol degiskenleri tanimlama
+	bool sinavSilindi = false;
+	bool dogrusinavNo = false;
+
+	//Islemlere baslamadan girildigi tc var olup olmadigi kontrol ettirmek.
+	ifstream DosyaOku2;
+	DosyaOku2.open("sinav.txt", ios::in);
+
+	if (DosyaOku2.is_open())//Dosyayi acik olup olmadigi bilme yontemi
+	{
+		DosyaOku2 >> sin.sinavNo >> sin.sinavturu >> sin.sinavtarihi >> sin.sorusay >> sin.sure;
+
+
+		while (!DosyaOku2.eof())
+		{
+			if (sin.sinavNo == no)
+			{
+				dogrusinavNo = true;
+			}
+			DosyaOku2 >> sin.sinavNo >> sin.sinavturu >> sin.sinavtarihi >> sin.sorusay >> sin.sure;
+		}
+		DosyaOku2.close();
+	}
+	else
+	{
+		cout << "\n\t\t\Sinav dosyasi acilmadi" << endl;
+	}
+
+	if (dogrusinavNo)//Demek ki SinavNo'yi bulunup islemler yapilabilir
+	{
+		/*Sinav silme zaman, kullanci ekledigi sinav numarasini silme amaciyla
+		baska yerde (Asagida) tanimaladigim fonksiyonuna silme dogru oldugunu ve kullanci
+		ekledigi sinav numarasini sayip sinav silmek icin silme bool tipinde cagirma ve o fonksiyonu cagirma
+		*/
+		bool silme;
+		//EkledigiKitapSayisi(sinavNo, silme = true);
+
+		ifstream DosyaOku;
+		DosyaOku.open("sinav.txt", ios::in);
+		ofstream yeniDosyayaYaz;
+		yeniDosyayaYaz.open("gecici.txt");
+
+		DosyaOku2 >> sin.sinavNo >> sin.sinavturu >> sin.sinavtarihi >> sin.sorusay >> sin.sure;
+
+		while (!DosyaOku.eof())
+		{
+			if (sin.sinavNo != no)
+			{
+				//Girildigi silecenek sinavNO'li ogrenci haric tum okuyucular yeni dosyaya (gecici) yazmak
+				yeniDosyayaYaz.setf(ios::left);
+				yeniDosyayaYaz << setw(15) << sin.sinavNo << setw(15) << sin.sinavturu << setw(15) << sin.sinavtarihi
+					<< setw(15) << sin.sorusay << setw(15) << sin.sure << "\n" << endl;
+
+				sinavSilindi = true;
+			}
+
+			DosyaOku >> sin.sinavNo >> sin.sinavturu >> sin.sinavtarihi >> sin.sorusay >>
+				sin.sure; //Dosyayi okuma devami
+
+		}
+		if (sinavSilindi) //Silme basardi
+		{
+			cout << "\n\t\t\tSinavimizda bu  " << no
+				<< " numarali sinav silindi...\n" << endl;
+		}
+		/*islemleri tamamladiktan sonra dosyalari kapatip
+		eski sinav dosyayi silip gecici dosyaya ogrenci adi verme */
+
+		DosyaOku.close();
+		yeniDosyayaYaz.close();
+
+		remove("sinav.txt");
+		rename("gecici.txt", "sinav.txt");
+
+	}
+	else
+	{
+		cout << "\n\t\t\tGirdiginiz sinav numarasi bulunamadi"
+			<< "\n\t\t\tLütfen kontrol edin." << endl;
+	}
+}
+
+void Sinav::SinavSonuc()
+{
+	char secim;
+
+	do
+	{
+		//Yapabilecek islemler (Menu)
+
+		cout << "\n\t\t______________________________________________________" << endl;
+		cout << "\t\t\t\t\tSINAV SONUCLARI" << endl;
+		cout << "\t\t------------------------------------------------------" << endl;
+
+		cout << "\n\n\t\t\t---Ne yapmak istiyorsunuz ?--- \n\n" << endl;
+
+		cout << "\t\t\t{1} Sinava giren ogrenciler" << endl;
+		cout << "\t\t\t{2} Sinav sonuclari" << endl;
+		cout << "\t\t\t{0} Cikis " << endl;
+
+		cout << "\n\t\t******************************************************" << endl;
+		cout << "\n\t\t\t Secim numarasini girin:  ";/* cin >> secim;*/
+		secim = _getche();
+
+		switch (secim)
+		{
+		case '1':
+		{
+			system("cls");
+			cout << "\n\n\n\t\t\t\tSINAVA GIRENLER ... " << endl;
+			sinav.Sinavagirenler();
+			break;
+		}
+
+		case'2':
+		{
+			Sinav::singirenler gir;
+			system("cls");
+			cout << "\n\n\n\t\t\t\tSINAV SONUCLARI..." << endl;
+			sinav.SinavSonuclari(gir);
+			system("pause");
+			break;
+		}
+
+		case '0':
+		{
+			//Kullanici, sistemden ciktigi zaman 'cikis=dogru' ve 'giris degil' oldugu belirleme
+			cikis = true;
+			giris = false;
+
+			system("cls");
+
+			Menufonksiyonu1();
+
+		}
+		default:cout << "\a"; // Yanlis tusa basinca ses cikma
+		}
+		system("cls");
+
+	} while (secim != '0'); // Sifir karakteri basincaya kadar dongude (sistemde) olma kosulu
+
+}
+
+
+void Sinav::Sinavagirenler()
+{
+	ofstream DosyaYaz; //ofstream tipinde (Yazmak icin) DosyaYaz degiskeni tanimlama
+	DosyaYaz.open("sinavagirenler.txt", ios::app); //ogrenci.txt dosyayi acma (olmasa da olusturacak)
+
+	char secim;
+
+	singirenler gir; // Sinav siniftaki  ogrenci struct tipindeki ok degisken tanimlama (bilgileri erismek icin) 
+
+	do
+	{
+		// Kullancidan ogrenci bilgileri istemek
+
+		int haneSayisi;
+		cout << "\n\t\t\tTC numarasini giriniz	    :"; cin >> gir.TcNo;
+		cin.clear(); // Karakter bir girdigi zaman sonsuz donguye gitmemesi icin kullanildi
+		cin.ignore();
+		haneSayisi = log10(gir.TcNo) + 1; // TC numara hanesini belirtmek icin
+
+		if (haneSayisi == 11) // TC numara 11 haneli oldugu zaman islemleri devami
+		{
+			cout << "\n\t\t\tAdi giriniz				 :"; getline(cin, gir.ad);
+			cout << "\n\t\t\tSoyadi giriniz				 :"; getline(cin, gir.soyad);
+			cout << "\n\t\t\tSoru sayisi giriniz		      :"; cin >> gir.sorusay;
+			cout << "\n\t\t\tSorunun puanini giriniz 	      :"; cin >> gir.sorupuan;
+			cout << "\n\t\t\tDogru cevap sayiyi giriniz	      :"; cin >> gir.docevsayi;
+			cout << "\n\t\t\tYanlis cevap            	      :"; gir.yavevsayi = (gir.sorusay - gir.docevsayi);
+			cout << gir.yavevsayi << endl;
+			cout << "\n\t\t\tpuan                		      :"; gir.puan = (gir.docevsayi * gir.sorupuan);
+			cout << gir.puan;
+			cin.ignore();
+
+			//sinavagirenler.txt dosayaya yazma
+			DosyaYaz.setf(ios::left);
+			DosyaYaz << setw(15) << gir.TcNo << setw(15) << gir.ad << setw(15) << gir.soyad <<
+				setw(15) << gir.sorusay << setw(15) << gir.docevsayi << setw(15) << gir.yavevsayi << setw(15) << gir.puan
+				<< "\n" << endl;
+
+			cout << "\n\n\t\t\tbaska sonuclari gormek ister misin... ? (e/h)";
+			cin >> secim;
+		}
+		else
+		{
+			if (haneSayisi <= 0)
+			{
+				cout << "\n\t\t\t\a" << "0 veya Karakter veya Negatif TC numara olamaz, lütfen 11 haneli ve pozitif bir TC giriniz." << endl;
+			}
+			else
+				cout << "\n\t\t\t\a" << haneSayisi << " haneli TC numara olamaz, lütfen 11 haneli bir TC giriniz." << endl;
+
+			secim = 'e'; //dongu devami
+		}
+
+	} while (secim == 'e' || secim == 'E');
+
+	cout << "\n\t\t\tTEBRIKLER BASARILILAR ICIN VE GECMIS OLSUN KALANLAR ICIN...\n" << endl;
+
+	DosyaYaz.close(); //sinavagirenler.txt dosyayi kapatma
+}
+
+
+void Sinav::SinavSonuclari(singirenler gir)
+{
+	ifstream DosyaOku;
+	DosyaOku.open("sinavagirenler.txt", ios::in);  // sinav.text dosyayi okuma
+
+
+	while (!(DosyaOku.eof()))
+	{
+		DosyaOku >> gir.TcNo >> gir.ad >> gir.soyad >> gir.sorusay >> gir.docevsayi >> gir.yavevsayi >> gir.puan;
+		cout << "\n\t\t\t" << setw(15) << gir.TcNo << setw(15) << gir.ad << setw(15) << gir.soyad << setw(18) << gir.puan << endl;
+		/*system("pause");*/
+	}
+
+	DosyaOku.close();  //sinav.txt dosyayi kapatma
+}
