@@ -140,12 +140,10 @@ int main()
 	} while (secenek != '1' && secenek != '2' && secenek != '3' && secenek != '4');
 
 
-
 	//KUllanicidan isteyecek kullanici Adi ve sifresi degiskenler tanimlama
 	string kullanci_adi;
 	string kullanci_soyadi;
 	string kullanci_sifresi;
-
 
 
 	if (secenek == '1')
@@ -670,7 +668,7 @@ void Sinav::OgrenciEkleme()
 
 	do
 	{
-		// Kullancidan ogrenci bilgileri istemek
+		// Kullanicidan ogrenci bilgileri istemek
 
 		int haneSayisi;
 		cout << "\n\t\t\tTC numarasini giriniz			:"; cin >> og.TcNo;
