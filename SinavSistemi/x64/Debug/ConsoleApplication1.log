@@ -1,2 +1,10 @@
 ﻿  ConsoleApplication1.cpp
+C:\Users\NANITH\Documents\GitHub\Cpp_Sinav_Sistemi-Programlamaya-giri--\SinavSistemi\ConsoleApplication1.cpp(601,31): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+C:\Users\NANITH\Documents\GitHub\Cpp_Sinav_Sistemi-Programlamaya-giri--\SinavSistemi\ConsoleApplication1.cpp(679,31): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+C:\Users\NANITH\Documents\GitHub\Cpp_Sinav_Sistemi-Programlamaya-giri--\SinavSistemi\ConsoleApplication1.cpp(753,8): warning C4101: 'silme': unreferenced local variable
+C:\Users\NANITH\Documents\GitHub\Cpp_Sinav_Sistemi-Programlamaya-giri--\SinavSistemi\ConsoleApplication1.cpp(809,7): warning C4101: 'secim': unreferenced local variable
+C:\Users\NANITH\Documents\GitHub\Cpp_Sinav_Sistemi-Programlamaya-giri--\SinavSistemi\ConsoleApplication1.cpp(900,10): warning C4129: 'S': unrecognized character escape sequence
+C:\Users\NANITH\Documents\GitHub\Cpp_Sinav_Sistemi-Programlamaya-giri--\SinavSistemi\ConsoleApplication1.cpp(953,11): warning C4129: 'S': unrecognized character escape sequence
+C:\Users\NANITH\Documents\GitHub\Cpp_Sinav_Sistemi-Programlamaya-giri--\SinavSistemi\ConsoleApplication1.cpp(962,8): warning C4101: 'silme': unreferenced local variable
+C:\Users\NANITH\Documents\GitHub\Cpp_Sinav_Sistemi-Programlamaya-giri--\SinavSistemi\ConsoleApplication1.cpp(1089,32): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
   ConsoleApplication1.vcxproj -> C:\Users\NANITH\Documents\GitHub\Cpp_Sinav_Sistemi-Programlamaya-giri--\SinavSistemi\x64\Debug\ConsoleApplication1.exe

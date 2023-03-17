@@ -85,6 +85,29 @@ public:
 }  sinav;   // sinav sinif tipindeki kutuphane degiskeni tanimlama
 //Sinif bittigi yeri
 
+
+
+
+void Menufonksiyonu1();        // Menu Hocalar programi
+void Menufonksiyonu2();        // Menu Ogrenciler programi
+void Kullancikaydi();
+
+
+//Sistem otomatik olarak Giris ve Cikis saatleri gosterip dosyaya yazma  fonksiyonu
+void getZaman(bool giris, bool cikis);
+
+//Sisteme giris ve cikis kontrol etmek icin olusturdugum bool tipindeki iki degisken
+bool cikis;
+bool giris;
+
+/////////////////////////-----HOCA BİLGİLERİ-------///////////////////
+
+string kullanciAdi;             //Hocanın Adı
+string kullanciSoyadi;          // Hocanın Soyadı
+string KullanciSifresi;         // hocanın Şifresi
+
+Sinav::ogrenci og;
+
 int main()
 {
 
@@ -1122,3 +1145,78 @@ void Sinav::SinavSonuclari(singirenler gir)
 
 	DosyaOku.close();  //sinav.txt dosyayi kapatma
 }
+
+
+////////////////////////////KULLANCI VE FONKSIYONLAR METOTLAR/////////////////////////////////////
+
+void  Kullancikaydi()
+{
+	//Ogrenci kaydi ve Ogrenci ekleme ile ayni mantiktir
+
+	ofstream DosyaYaz;
+	DosyaYaz.open("kullancilar.txt", ios::app);
+
+	cout << "\n\t\t\t\tKULLANICI KAYDI\n" << endl;
+
+	char cevap;
+	do
+	{
+		cout << "\n\t\t\tKullanci adi giriniz		:";
+		cin >> kullanciAdi;
+
+		cout << "\n\t\t\tKullanci soyadi giriniz		:";
+		cin >> kullanciSoyadi;
+
+		cout << "\n\t\t\tKullanci sifresini giriniz	:";
+		cin >> KullanciSifresi;
+
+		DosyaYaz.setf(ios::left);
+		DosyaYaz << setw(30) << kullanciAdi << setw(30) << kullanciSoyadi << setw(30) << KullanciSifresi << "\n" << endl;
+
+		cout << "\n\t\t\tBaska kayit yapacak misin?(e/h) ";
+		cin >> cevap;
+
+	} while (!(cevap == 'h' || cevap == 'H'));
+
+	DosyaYaz.close();
+	cout << "\n\t\t\tKayit islemi basardi...\n";
+}
+
+
+
+void getZaman(bool giris = false, bool cikis = false)
+{
+	//Sistem otomatik olarak Giris ve Cikis saatleri gosterip dosyaya yazma 
+	struct tm zaman;
+	time_t suan = time(0);
+	localtime_s(&zaman, &suan);
+
+	int saat = zaman.tm_hour;
+	int dakika = zaman.tm_min;
+	int saniye = zaman.tm_sec;
+
+	int gun = zaman.tm_mday;
+	int ay = 1 + zaman.tm_mon;
+	int yil = 1900 + zaman.tm_year;
+
+
+	ofstream GirisCikisSaatleri;
+	GirisCikisSaatleri.open("GirisCikisSaatleri.txt", ios::app);
+
+	if (giris) //Kullanci sisteme giris basardigi zaman (giris=true--> dogru) saat dosyaya yazma
+	{
+		GirisCikisSaatleri << left << setw(20) << kullanciAdi << setw(20) << kullanciSoyadi << "Giris saati : " << saat
+			<< ":" << dakika << ":" << saniye << "	" << gun << "/" << ay << "/" << yil;
+	}
+	if (cikis)//Kullanci sistemden cikis basardigi zaman (cikis=true--> dogru) saat dosyaya yazma
+	{
+		GirisCikisSaatleri << left << setw(10) << "" << "Cikis saati : " << saat
+			<< ":" << dakika << ":" << saniye << "	" << gun << "/" << ay << "/" << yil << "\n" << endl;
+	}
+	GirisCikisSaatleri.close();
+
+	cout << saat << ":" << dakika << ":" << saniye << "	" << gun << "/" << ay << "/" << yil << endl;
+}
+
+
+////////Copyright NANITH 2022-2023////////
