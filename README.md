@@ -1,4 +1,4 @@
-# Cpp_Sinav_Sistemi-Programlamaya
+# Cpp_Sinav_Sistemi-Programlamaya-giris
 
 Test sınavı hazırlama ve test sınavını uygulama programı gerçekleştirmek amaçlanıyor.
 Bu amaçla Soru, öğrenci  ve gerekli sınıfları oluşturuldu.
